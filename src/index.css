@@ -1,0 +1,322 @@
+/* src/index.css — estilos globales para coincidir con mockup */
+:root{
+  --brand-red: #7a1b1b;
+  --brand-red-dark: #691515;
+  --muted-bg: #f3f4f6;
+  --card-bg: #ffffff;
+  --accent-green: #2f8f4e;
+  --muted-text: #6b7280;
+  --text: #0f1724;
+}
+
+/* Base */
+*{box-sizing:border-box}
+html,body,#root{height:100%}
+body{
+  font-family: "Inter", system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+  background: var(--muted-bg);
+  color: var(--text);
+  margin:0;
+  -webkit-font-smoothing:antialiased;
+  -moz-osx-font-smoothing:grayscale;
+}
+
+/* NAV */
+.header-top{
+  background: var(--brand-red);
+  color: white;
+  box-shadow: 0 6px 18px rgba(0,0,0,0.12);
+  position: sticky;
+  top: 0;
+  z-index: 40;
+}
+.header-top .container{max-width:1200px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;padding:18px}
+
+/* HERO */
+.hero{
+  background:
+    linear-gradient(rgba(7,7,7,0.55), rgba(7,7,7,0.45)),
+    url('/hero-bg.jpg') center/cover no-repeat;
+  color: white;
+  padding: 80px 0 110px; /* grande para hero */
+}
+.hero .container{max-width:1100px;margin:0 auto;text-align:center;padding:0 20px}
+.hero h1{
+  font-size:44px;
+  line-height:1.02;
+  font-weight:800;
+  margin:0 auto 28px;
+  max-width:1000px;
+  letter-spacing:-0.5px;
+}
+.hero .cta{
+  display:inline-block;
+  background:linear-gradient(180deg,var(--brand-red),var(--brand-red-dark));
+  color:white;
+  padding:14px 34px;
+  border-radius:12px;
+  font-weight:700;
+  box-shadow: 0 18px 40px rgba(18,18,18,0.35);
+  text-decoration:none;
+}
+
+/* PANEL ICONS (white floating panel) */
+.icon-panel-wrap{max-width:1100px;margin:0 auto;padding:0 20px}
+.icon-panel{
+  background: rgba(255,255,255,0.98);
+  border-radius:12px;
+  padding:26px 36px;
+  display:flex;
+  gap:40px;
+  justify-content:space-between;
+  align-items:center;
+  transform: translateY(-60px);
+  box-shadow: 0 12px 30px rgba(12,12,12,0.08);
+  border:1px solid rgba(0,0,0,0.03);
+}
+
+/* icon block */
+.icon-panel .item{flex:1;text-align:center;color:#374151}
+.icon-panel .item svg{opacity:0.95}
+.icon-panel .item .label{margin-top:14px;color:#374151;font-weight:600}
+
+/* MAIN CARD (chatbot) */
+.main-card{
+  max-width:980px;
+  margin: -36px auto 40px;
+  background: var(--card-bg);
+  border-radius:14px;
+  padding:20px;
+  box-shadow: 0 18px 40px rgba(12,12,12,0.06);
+  border:1px solid rgba(16,16,16,0.03);
+}
+
+/* chatbot header + controls */
+.main-card .header-row{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px}
+.main-card h3{margin:0;font-size:22px}
+
+/* input */
+.input-like{width:100%;padding:14px;border-radius:10px;border:1px solid rgba(0,0,0,0.06);resize:vertical;background:#fff}
+
+/* botones */
+.btn-red{background:var(--brand-red);color:white;padding:12px 18px;border-radius:10px;font-weight:700;border:none;cursor:pointer}
+.btn-outline{background:white;border:1px solid rgba(0,0,0,0.08);padding:10px;border-radius:8px;cursor:pointer}
+
+/* result box */
+.result-box{
+  margin-top:18px;
+  border-radius:10px;
+  border:1px solid rgba(0,0,0,0.04);
+  padding:18px;
+  background: linear-gradient(180deg,#ffffff,#fbfbfb);
+  display:flex;gap:18px;align-items:flex-start;
+}
+
+/* badge */
+.badge-true{background:var(--accent-green);color:white;padding:8px 12px;border-radius:10px;font-weight:700}
+.badge-false{background:#b53a3a;color:white;padding:8px 12px;border-radius:10px;font-weight:700}
+.badge-incon{background:#d6a23a;color:white;padding:8px 12px;border-radius:10px;font-weight:700}
+
+/* recent cards */
+.recent-grid{max-width:1100px;margin:24px auto;padding:0 20px;display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
+.recent-card{background:white;border-radius:10px;padding:14px;border:1px solid rgba(0,0,0,0.03);box-shadow:0 12px 24px rgba(12,12,12,0.04)}
+
+/* responsive */
+@media(max-width:1024px){
+  .hero h1{font-size:36px}
+  .icon-panel{transform:translateY(-40px);padding:18px}
+  .main-card{margin:-28px 20px 28px}
+  .recent-grid{grid-template-columns:repeat(2,1fr)}
+}
+@media(max-width:640px){
+  .hero{padding:60px 0 80px}
+  .hero h1{font-size:26px}
+  .icon-panel{flex-direction:column;gap:10px;transform:translateY(-20px)}
+  .recent-grid{grid-template-columns:1fr}
+  .main-card{padding:16px;margin:-18px 12px 20px}
+}
+/* Spinner keyframes */
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+/* ----- NAVBAR / HERO FIX (copiar al final de src/index.css o src/styles.css) ----- */
+
+/* Nav */
+.header-top {
+  background: #7b1717;           /* color rojo */
+  padding: 18px 0;
+  position: relative;
+  z-index: 50;                   /* que quede encima del hero */
+  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+}
+
+.header-top .container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.header-top img { height: 42px; } /* logo un poco más grande */
+.header-top span { color: #fff; font-weight: 800; letter-spacing: 0.6px; font-size: 20px; }
+
+/* Nav links (más grandes y visibles) */
+.header-top nav a {
+  color: rgba(255,255,255,0.95);
+  text-decoration: none;
+  font-weight: 600;
+  font-size: 15px;
+  margin-left: 18px;
+}
+
+/* ----- HERO ----- */
+.hero {
+  padding: 100px 0 36px;    /* espacio superior para que NAV no tape el título */
+  background: linear-gradient(180deg, rgba(0,0,0,0.35), rgba(0,0,0,0.12));
+  position: relative;
+  color: #fff;
+}
+
+.hero .container { max-width: 1100px; margin: 0 auto; padding: 0 20px; text-align: center; }
+
+.hero h1 {
+  font-size: 48px;          /* grande como en el mockup */
+  line-height: 1.02;
+  font-weight: 800;
+  margin: 0 auto;
+  max-width: 980px;
+  color: #fff;
+  text-shadow: 0 2px 8px rgba(0,0,0,0.35);
+}
+
+/* CTA */
+.hero .cta {
+  display:inline-block;
+  margin-top: 18px;
+  background:#7b1515;
+  color:#fff;
+  padding:12px 28px;
+  border-radius:12px;
+  text-decoration:none;
+  font-weight:700;
+}
+
+/* ----- ICON PANEL (tarjetas debajo del hero) ----- */
+.icon-panel-wrap { margin-top: 28px; display:flex; justify-content:center; }
+.icon-panel {
+  width: min(1100px, 96%);
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 8px 30px rgba(11,20,30,0.08);
+  display:flex;
+  gap: 18px;
+  padding: 20px;
+  align-items: center;
+  z-index: 40;
+  position: relative; /* para que quede claro sobre el hero */
+}
+
+/* cada item del panel */
+.icon-panel .item {
+  flex: 1;
+  text-align: center;
+  padding: 12px 10px;
+}
+.icon-panel svg { display:block; margin: 0 auto; }
+.icon-panel .label {
+  margin-top: 12px;
+  font-weight: 700;
+  font-size: 18px;
+  color: #1f2937;
+}
+
+/* evita que el panel tape el contenido siguiente */
+.main-content { margin-top: 36px; }
+
+/* ----- FORM / CHATBOT container spacing (evita overlap con icon panel) ----- */
+#chatbot-section, .chatbot-wrapper {
+  margin-top: 18px;     /* suficiente separación */
+  padding-top: 10px;
+}
+
+/* ----- Responsive tweaks ----- */
+@media (max-width: 900px) {
+  .hero h1 { font-size: 36px; }
+  .icon-panel { flex-direction: column; gap: 12px; padding: 16px; }
+  .icon-panel .item { padding: 14px 6px; }
+  .header-top .container { padding: 0 12px; }
+  .header-top nav a { font-size: 14px; margin-left: 12px; }
+}
+/* ===== Hero / layout fixes ===== */
+.hero {
+  background-color: rgba(55, 65, 81, 0.9); /* gris oscuro */
+  padding-top: 3.5rem;    /* espacio arriba para navbar */
+  padding-bottom: 4.5rem; /* espacio suficiente por debajo */
+  position: relative;
+  z-index: 0;
+}
+
+/* inner constrain */
+.hero-inner { max-width: 1100px; margin: 0 auto; padding: 0 20px; }
+
+/* Title styling (responsive) */
+.hero-title {
+  font-size: 2.25rem; /* mobile */
+  line-height: 1.02;
+  color: white;
+  font-weight: 800;
+  text-align: center;
+  margin: 0 auto;
+  max-width: 1100px;
+}
+@media (min-width: 768px) {
+  .hero-title { font-size: 3.25rem; }
+}
+@media (min-width: 1024px) {
+  .hero-title { font-size: 4.25rem; }
+}
+
+/* CTA */
+.hero-cta-wrap { display:flex; justify-content:center; margin-top:1rem; }
+.hero-cta {
+  background:white; color:#111827; padding:0.75rem 1.25rem; border-radius:999px;
+  font-weight:600; box-shadow:0 6px 18px rgba(0,0,0,0.12); text-decoration:none;
+}
+
+/* panel / cards inside hero */
+.hero-panel-wrap { display:flex; justify-content:center; margin-top:2.25rem; }
+.hero-panel { display:grid; grid-template-columns:repeat(1,1fr); gap:1rem; width:100%; max-width:980px; }
+@media (min-width:768px) {
+  .hero-panel { grid-template-columns:repeat(3,1fr); }
+}
+
+/* each item */
+.hero-item {
+  background: rgba(255,255,255,0.94);
+  border-radius: 16px;
+  padding: 1.3rem;
+  text-align: center;
+  transition: transform .18s ease, box-shadow .18s ease;
+  text-decoration: none;
+  color: inherit;
+  box-shadow: 0 10px 30px rgba(2,6,23,0.08);
+}
+.hero-item:hover { transform: translateY(-6px); box-shadow:0 16px 40px rgba(2,6,23,0.12); }
+
+.hero-emoji { font-size: 2.5rem; margin-bottom: 0.6rem; }
+.hero-item-title { font-weight:700; font-size:1.15rem; color:#111827; margin-bottom:0.45rem; }
+.hero-item-desc { font-size:0.9rem; color:#6b7280; margin:0 auto; max-width:18rem; }
+
+/* ===== Prevent overlap with main content =====
+   * Important: the main content container must have class "main-content"
+*/
+.main-content {
+  position: relative;
+  z-index: 10;            /* keep cards above background but below any modals */
+  margin-top: -48px;      /* slight overlap (like mock). Reduce to 0 to remove overlap */
+  padding-top: 48px;      /* ensures content isn't covered by hero */
+}
+
+/* If you prefer NO overlap, set margin-top: 0 on .main-content and remove padding-top */
