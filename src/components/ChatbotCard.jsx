@@ -8,7 +8,9 @@ export default function ChatbotCard() {
   const [attemptsLog, setAttemptsLog] = useState([]);
   const [showLoader, setShowLoader] = useState(false); // controla la animación visible
 
-  const baseUrl = import.meta.env.VITE_API_BASE || "http://localhost:3001";
+  // temporalmente forzar backend público
+  const baseUrl = "https://veri-valle-backend.vercel.app";
+
 
   // 🔧 Apaga loader cuando llega resultado
   useEffect(() => {
@@ -39,32 +41,88 @@ export default function ChatbotCard() {
     setTimeout(() => setLoadingStage("stage3"), 5000);
   }
 
-  async function handleVerifyText(e) {
+    // pega esto dentro del componente ChatbotCard, antes del return(...)
+    async function handleVerifyText(e) {
     e?.preventDefault();
     setError(null);
     setResult(null);
     setAttemptsLog([]);
     startLocalProgression();
 
+    // AbortController para evitar loader infinito (timeout 12s)
+    const controller = new AbortController();
+    const timeout = setTimeout(() => controller.abort(), 12000);
+
     try {
-      const resp = await fetch(`${baseUrl}/api/verify/text`, {
+        console.log("[FRONT] enviando POST a:", `${baseUrl}/api/verify/text`, "input:", input);
+
+        const resp = await fetch(`${baseUrl}/api/verify/text`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ text: input }),
-      });
+        signal: controller.signal
+        });
 
-      const data = await resp.json();
-      if (!data.ok) throw new Error(data.error || "Error desconocido");
+        clearTimeout(timeout);
+        console.log("[FRONT] status:", resp.status, resp.statusText);
 
-      setAttemptsLog(data.attemptsLog || []);
-      setResult(data.result);
+        // leer raw en todos los casos (por si no es JSON)
+        const raw = await resp.text().catch(() => null);
+        console.log("[FRONT] raw response text:", raw);
+
+        let data = null;
+        try {
+        data = raw ? JSON.parse(raw) : null;
+        } catch (err) {
+        console.warn("[FRONT] respuesta NO JSON:", err);
+        setError("Respuesta del servidor no es JSON válido. Mira la consola para más info.");
+        setLoadingStage(null);
+        setShowLoader(false);
+        return;
+        }
+
+        if (!data) {
+        setError("Respuesta vacía del servidor.");
+        setLoadingStage(null);
+        setShowLoader(false);
+        return;
+        }
+
+        console.log("[FRONT] parsed data:", data);
+
+        if (data.ok === false) {
+        setError(data.error || "Error retornado por servidor.");
+        setLoadingStage(null);
+        setShowLoader(false);
+        return;
+        }
+
+        if (data.result) {
+        setAttemptsLog(data.attemptsLog || []);
+        setResult(data.result);
+        setLoadingStage(null);
+        setShowLoader(false);
+        return;
+        }
+
+        // fallback si viene ok true pero sin result
+        setAttemptsLog(data.attemptsLog || []);
+        setError("Servidor respondió sin campo 'result'. Revisa backend. (Mira consola)");
+        setLoadingStage(null);
+        setShowLoader(false);
     } catch (err) {
-      console.error(err);
-      setError("Error al verificar la información. Revisa tu conexión o el servidor.");
-      setLoadingStage(null);
-      setShowLoader(false);
+        clearTimeout(timeout);
+        console.error("[FRONT] fetch error:", err);
+        if (err.name === "AbortError") {
+        setError("La petición tardó demasiado y fue abortada (timeout).");
+        } else {
+        setError("Error al verificar la información. Revisa tu conexión o el servidor.");
+        }
+        setLoadingStage(null);
+        setShowLoader(false);
     }
-  }
+    }
+
 
   // ✅ Limpia los enlaces tipo Markdown o texto plano
   function parseEvidenceText(e) {
