@@ -15,7 +15,7 @@ export default function RecentCases(){
 
   return (
     <section className="mt-10 max-w-5xl mx-auto">
-      <h3 className="text-2xl font-bold mb-4">Casos recientes de verificación</h3>
+      {/* <h3 className="text-2xl font-bold mb-4">Casos recientes de verificación</h3> */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
         {items.length ? items.map(it => (
           <div key={it.id} className="recent-card">
@@ -27,7 +27,7 @@ export default function RecentCases(){
             <p className="text-xs text-gray-600 mt-2">{it.excerpt ?? ''}</p>
           </div>
         )) : (
-          <div className="text-sm text-gray-500 col-span-3">No hay verificaciones públicas aún.</div>
+          <div className="text-sm text-gray-500 col-span-3"></div>
         )}
       </div>
     </section>
