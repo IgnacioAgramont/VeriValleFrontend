@@ -1,3 +1,4 @@
+// src/components/ChatbotCard.jsx
 import React, { useState, useEffect } from "react";
 
 export default function ChatbotCard() {
@@ -6,17 +7,14 @@ export default function ChatbotCard() {
   const [result, setResult] = useState(null);
   const [error, setError] = useState(null);
   const [attemptsLog, setAttemptsLog] = useState([]);
-  const [showLoader, setShowLoader] = useState(false); // controla la animación visible
+  const [showLoader, setShowLoader] = useState(false);
 
-  // temporalmente forzar backend público
-  const baseUrl = "https://veri-valle-backend.vercel.app";
+  // FRONT: URL del backend (preferible: definir VITE_API_BASE en Netlify)
+  const baseUrl = import.meta.env.VITE_API_BASE || "https://veri-valle-backend.vercel.app";
 
-
-  // 🔧 Apaga loader cuando llega resultado
   useEffect(() => {
     if (result) {
       setLoadingStage(null);
-      // espera 0.5s y desaparece el bloque
       setTimeout(() => setShowLoader(false), 500);
     }
   }, [result]);
@@ -37,107 +35,122 @@ export default function ChatbotCard() {
   function startLocalProgression() {
     setShowLoader(true);
     setLoadingStage("stage1");
-    setTimeout(() => setLoadingStage("stage2"), 2000);
-    setTimeout(() => setLoadingStage("stage3"), 5000);
+    setTimeout(() => setLoadingStage("stage2"), 1800);
+    setTimeout(() => setLoadingStage("stage3"), 4300);
   }
 
-    // pega esto dentro del componente ChatbotCard, antes del return(...)
-    async function handleVerifyText(e) {
+  // ------------------ handleVerifyText (front) ------------------
+  async function handleVerifyText(e) {
     e?.preventDefault();
     setError(null);
     setResult(null);
     setAttemptsLog([]);
     startLocalProgression();
 
-    // AbortController para evitar loader infinito (timeout 12s)
+    // Timeout (20s)
     const controller = new AbortController();
-    const timeout = setTimeout(() => controller.abort(), 12000);
+    const timeout = setTimeout(() => controller.abort(), 20000);
 
     try {
-        console.log("[FRONT] enviando POST a:", `${baseUrl}/api/verify/text`, "input:", input);
+      console.log("[FRONT] Enviando POST a:", `${baseUrl}/api/verify/text`, "input:", input);
 
-        const resp = await fetch(`${baseUrl}/api/verify/text`, {
+      const resp = await fetch(`${baseUrl}/api/verify/text`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ text: input }),
-        signal: controller.signal
-        });
+        signal: controller.signal,
+        // credentials: "include" // activar si tu backend requiere cookies
+      });
 
-        clearTimeout(timeout);
-        console.log("[FRONT] status:", resp.status, resp.statusText);
+      clearTimeout(timeout);
 
-        // leer raw en todos los casos (por si no es JSON)
-        const raw = await resp.text().catch(() => null);
-        console.log("[FRONT] raw response text:", raw);
+      console.log("[FRONT] STATUS", resp.status, resp.statusText);
 
-        let data = null;
-        try {
+      // Leemos raw (por si no es JSON)
+      const raw = await resp.text().catch(() => null);
+      console.log("[FRONT] RAW TEXT:", raw);
+
+      let data = null;
+      try {
         data = raw ? JSON.parse(raw) : null;
-        } catch (err) {
+      } catch (err) {
         console.warn("[FRONT] respuesta NO JSON:", err);
-        setError("Respuesta del servidor no es JSON válido. Mira la consola para más info.");
+        setError("Respuesta del servidor no es JSON válido. Revisa la consola (RAW TEXT).");
         setLoadingStage(null);
         setShowLoader(false);
         return;
-        }
+      }
 
-        if (!data) {
+      if (!data) {
         setError("Respuesta vacía del servidor.");
         setLoadingStage(null);
         setShowLoader(false);
         return;
-        }
+      }
 
-        console.log("[FRONT] parsed data:", data);
+      console.log("[FRONT] parsed data:", data);
 
-        if (data.ok === false) {
+      if (data.ok === false) {
         setError(data.error || "Error retornado por servidor.");
         setLoadingStage(null);
         setShowLoader(false);
         return;
-        }
+      }
 
-        if (data.result) {
+      // Si backend devuelve `result`
+      if (data.result) {
         setAttemptsLog(data.attemptsLog || []);
         setResult(data.result);
         setLoadingStage(null);
         setShowLoader(false);
         return;
-        }
+      }
 
-        // fallback si viene ok true pero sin result
-        setAttemptsLog(data.attemptsLog || []);
-        setError("Servidor respondió sin campo 'result'. Revisa backend. (Mira consola)");
-        setLoadingStage(null);
-        setShowLoader(false);
+      // Fallback: si viene ok true pero sin result
+      setAttemptsLog(data.attemptsLog || []);
+      setError("Servidor respondió sin campo 'result'. Mira consola para más detalles.");
+      setLoadingStage(null);
+      setShowLoader(false);
     } catch (err) {
-        clearTimeout(timeout);
-        console.error("[FRONT] fetch error:", err);
-        if (err.name === "AbortError") {
+      clearTimeout(timeout);
+      console.error("[FRONT] fetch error:", err);
+      if (err.name === "AbortError") {
         setError("La petición tardó demasiado y fue abortada (timeout).");
-        } else {
+      } else {
         setError("Error al verificar la información. Revisa tu conexión o el servidor.");
-        }
-        setLoadingStage(null);
-        setShowLoader(false);
+      }
+      setLoadingStage(null);
+      setShowLoader(false);
     }
-    }
+  }
+  // ---------------------------------------------------------------
 
-
-  // ✅ Limpia los enlaces tipo Markdown o texto plano
+  // Limpia enlaces / formatea evidencia para mostrar
   function parseEvidenceText(e) {
     if (!e) return { text: "", url: null };
-
-    // Caso 1: formato [texto](url)
+    if (typeof e === "object") {
+      // objeto { title, url, href, text }
+      const txt = e.title || e.text || e.url || e.href || "";
+      const url = e.url || e.href || null;
+      return { text: txt, url };
+    }
+    // string
     const mdMatch = e.match(/\[([^\]]+)\]\((https?:\/\/[^\s)]+)\)/);
     if (mdMatch) return { text: mdMatch[1], url: mdMatch[2] };
-
-    // Caso 2: contiene URL en texto plano
     const urlMatch = e.match(/https?:\/\/[^\s)]+/);
     if (urlMatch) return { text: e.replace(urlMatch[0], "").trim() || urlMatch[0], url: urlMatch[0] };
-
-    // Caso 3: solo texto
     return { text: e, url: null };
+  }
+
+  // Normaliza confianza: si viene 0..1 lo transforma a 0..100, si viene >1 lo redondea
+  function normalizeConfidence(c) {
+    if (c === undefined || c === null) return "—";
+    const n = Number(c);
+    if (Number.isNaN(n)) return "—";
+    let val = n;
+    if (val > 0 && val <= 1) val = Math.round(val * 100);
+    else val = Math.round(val);
+    return `${val}%`;
   }
 
   return (
@@ -205,9 +218,9 @@ export default function ChatbotCard() {
               <div className="text-sm text-gray-600">Veredicto</div>
               <div
                 className={`text-lg font-semibold ${
-                  result.veredicto === "VERDADERO"
+                  (result.veredicto || "").toUpperCase() === "VERDADERO"
                     ? "text-green-700"
-                    : result.veredicto === "FALSO"
+                    : (result.veredicto || "").toUpperCase() === "FALSO"
                     ? "text-red-700"
                     : "text-gray-700"
                 }`}
@@ -215,9 +228,10 @@ export default function ChatbotCard() {
                 {result.veredicto ?? "INCONCLUSO"}
               </div>
             </div>
+
             <div>
               <div className="px-3 py-1 rounded bg-amber-500 text-white font-semibold">
-                Confianza: {result.confianza ?? "—"}%
+                Confianza: {normalizeConfidence(result.confianza)}
               </div>
             </div>
           </div>
@@ -234,40 +248,31 @@ export default function ChatbotCard() {
             </div>
           )}
 
-            {result.evidencias?.length > 0 && (
+          {Array.isArray(result.evidencias) && result.evidencias.length > 0 && (
             <div className="mt-4">
-                <h3 className="font-medium text-gray-700 mb-2">Fuentes consultadas:</h3>
-                <ul className="list-disc ml-5 text-sm text-blue-800 space-y-1">
+              <h3 className="font-medium text-gray-700 mb-2">Fuentes consultadas:</h3>
+              <ul className="list-disc ml-5 text-sm text-blue-800 space-y-1">
                 {result.evidencias.map((ev, i) => {
-                    const title = ev.title || ev.text || ev.url || "Fuente";
-                    const url = ev.url || ev.href || null;
-                    return (
+                  const parsed = parseEvidenceText(ev);
+                  return (
                     <li key={i}>
-                        {url ? (
-                        <a
-                            href={url}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="hover:underline"
-                        >
-                            {title}
+                      {parsed.url ? (
+                        <a href={parsed.url} target="_blank" rel="noopener noreferrer" className="hover:underline">
+                          {parsed.text || parsed.url}
                         </a>
-                        ) : (
-                        <span className="text-gray-700">{title}</span>
-                        )}
+                      ) : (
+                        <span className="text-gray-700">{parsed.text}</span>
+                      )}
                     </li>
-                    );
+                  );
                 })}
-                </ul>
+              </ul>
             </div>
-            )}
-
+          )}
 
           {attemptsLog?.length > 0 && (
             <details className="mt-4 text-sm text-gray-500">
-              <summary className="cursor-pointer">
-                Detalles técnicos ({attemptsLog.length} etapas)
-              </summary>
+              <summary className="cursor-pointer">Detalles técnicos ({attemptsLog.length} etapas)</summary>
               <pre className="bg-gray-50 p-2 rounded mt-2 overflow-auto text-xs">
                 {JSON.stringify(attemptsLog, null, 2)}
               </pre>
