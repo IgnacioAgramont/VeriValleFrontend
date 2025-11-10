@@ -1,8 +1,8 @@
 // src/components/RecentCases.jsx
 import React, { useEffect, useState } from "react";
+import axios from "axios";
 
 const BASE_URL = import.meta.env.VITE_API_BASE || "https://veri-valle-backend.vercel.app";
-// en local: VITE_API_BASE = http://localhost:3001
 
 function formatDate(iso) {
   try {
@@ -22,14 +22,22 @@ export default function RecentCases({ limit = 6 }) {
       setLoading(true);
       setErr(null);
       try {
-        const res = await fetch(`${BASE_URL}/api/recent`);
-        if (!res.ok) throw new Error(`HTTP ${res.status}`);
-        const data = await res.json();
+        const res = await axios.get(`${BASE_URL}/api/recent`, {
+          // no withCredentials by default; si usas cookies set withCredentials:true y config en backend
+          headers: { Accept: "application/json" },
+          timeout: 10000
+        });
+
         if (!mounted) return;
-        if (!data.ok) throw new Error(data.error || "Respuesta inválida del servidor");
-        setItems((data.items || []).slice(0, limit));
+        const data = res.data;
+        if (!data || !data.ok) throw new Error(data?.error || "Respuesta inválida del servidor");
+        // tu backend devolvía items en varios keys; en mi versión devuelve items o verifications_sample
+        const itemsArr = data.items || data.verifications_sample || data.verifications || [];
+        setItems((itemsArr || []).slice(0, limit));
       } catch (e) {
-        setErr(e.message || String(e));
+        // axios error handling
+        const msg = e?.response ? `HTTP ${e.response.status}` : (e.message || String(e));
+        setErr(msg);
         setItems([]);
       } finally {
         if (mounted) setLoading(false);
@@ -67,7 +75,6 @@ export default function RecentCases({ limit = 6 }) {
             <ul className="mt-4 list-disc ml-5 text-sm text-blue-800">
               {it.evidences.map((e, i) => {
                 if (typeof e === "string") {
-                  // intento extraer URL
                   const match = e.match(/https?:\/\/[^\s)]+/);
                   const url = match ? match[0] : null;
                   const label = url ? e.replace(url, "").trim() || url : e;
