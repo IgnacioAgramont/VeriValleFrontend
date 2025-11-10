@@ -4,10 +4,10 @@ import React from "react";
 export default function Hero() {
   return (
     <section className="bg-gray-700/90 pb-12 pt-16" role="banner">
-      <div className="max-w-6xl mx-auto px-6">
+      <div className="max-w-6xl mx-auto px-6 pt-12">
         {/* TITULO */}
         <h1 className="text-3xl md:text-5xl lg:text-6xl font-extrabold text-white text-center leading-tight">
-          Verifica, aprende y comparte información confiable.
+          Verifica, Confía, Comparte la Verdad.
         </h1>
 
         {/* CTA */}
