@@ -1,65 +1,105 @@
 // src/App.jsx
-import React, { useEffect } from "react";
-import Navbar from "./components/Navbar";
+import React from "react";
+import { BrowserRouter as Router, Routes, Route, Link } from "react-router-dom";
 import Hero from "./components/Hero";
 import ChatbotCard from "./components/ChatbotCard";
 import RecentCases from "./components/RecentCases";
 import Footer from "./components/Footer";
+import Recursos from "./pages/recursos";
 
-export default function App() {
-  // Maneja clicks en enlaces #... y hace scroll suave
-  useEffect(() => {
-    function onClick(e) {
-      const a = e.target.closest && e.target.closest('a[href^="#"]');
-      if (!a) return;
-      const href = a.getAttribute("href");
-      if (!href || href === "#") return;
-      const id = href.slice(1);
-      const el = document.getElementById(id);
-      if (!el) return;
-
-      e.preventDefault();
-      // altura del header (si tu header es fijo, esto evita que tape el objetivo)
-      const header = document.querySelector("header");
-      const headerHeight = header ? header.offsetHeight : 80;
-      const top = el.getBoundingClientRect().top + window.scrollY - headerHeight - 8;
-      window.scrollTo({ top, behavior: "smooth" });
-    }
-
-    document.addEventListener("click", onClick);
-    return () => document.removeEventListener("click", onClick);
-  }, []);
-
+// 🧭 Navbar actualizado con navegación entre páginas
+function Navbar() {
   return (
-    <div className="min-h-screen flex flex-col bg-gray-50">
-      <header>
-        <Navbar />
-      </header>
-
-      {/* HERO */}
-      <section id="inicio">
-        <Hero />
-      </section>
-
-      {/* CHATBOT */}
-      <main
-        id="chatbot"
-        className="relative z-10 w-full max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 pt-24 sm:pt-28 lg:pt-32"
+    <header className="header-top bg-blue-700 text-white py-4" role="banner">
+      <div
+        className="container"
+        style={{
+          maxWidth: 1200,
+          margin: "0 auto",
+          padding: "0 20px",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "space-between",
+          gap: 12,
+        }}
       >
-        <ChatbotCard />
-      </main>
+        <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
+          <img
+            src="/logo.png"
+            alt="VeriValle"
+            style={{ height: 46, display: "block" }}
+          />
+          <span
+            style={{
+              color: "#fff",
+              fontWeight: 800,
+              letterSpacing: 0.6,
+              fontSize: 22,
+            }}
+          >
+            VeriValle
+          </span>
+        </div>
 
-      {/* VERIFICACIONES */}
-      <section id="verificaciones" className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 mt-12">
-        <RecentCases />
-      </section>
+        <nav
+          aria-label="Main navigation"
+          style={{
+            display: "flex",
+            gap: 20,
+            alignItems: "center",
+          }}
+        >
+          <Link to="/" style={linkStyle}>
+            Inicio
+          </Link>
+          <a href="#chatbot" style={linkStyle}>
+            Chatbot
+          </a>
+          <a href="#verificaciones" style={linkStyle}>
+            Verificaciones
+          </a>
+          <Link to="/recursos" style={linkStyle}>
+            Recursos
+          </Link>
+        </nav>
+      </div>
+    </header>
+  );
+}
 
-      {/* RECURSOS (opcional) */}
-      <section id="recursos" className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 mt-12">
-        {/* contenido futuro */}
-      </section>
+// 🎨 estilos reutilizables
+const linkStyle = {
+  color: "rgba(255,255,255,0.95)",
+  textDecoration: "none",
+  fontWeight: 600,
+};
 
-      <Footer />
-    </div>
+// 🧩 Componente principal con rutas
+export default function App() {
+  return (
+    <Router>
+      <div className="min-h-screen flex flex-col bg-gray-50">
+        <Navbar />
+        <Routes>
+          {/* Página principal */}
+          <Route
+            path="/"
+            element={
+              <>
+                <Hero />
+                <main className="relative z-10 w-full max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 pt-24 sm:pt-28 lg:pt-32">
+                  <ChatbotCard />
+                  <RecentCases />
+                </main>
+                <Footer />
+              </>
+            }
+          />
+
+          {/* Página de recursos */}
+          <Route path="/recursos" element={<Recursos />} />
+        </Routes>
+      </div>
+    </Router>
   );
 }
