@@ -129,9 +129,20 @@ export default function ChatbotCard() {
   function parseEvidenceText(e) {
     if (!e) return { text: "", url: null };
     if (typeof e === "object") {
-      // objeto { title, url, href, text }
-      const txt = e.title || e.text || e.url || e.href || "";
-      const url = e.url || e.href || null;
+      // objeto { title, url, href, text, ... }
+      const url = e.url || e.href || e.link || null;
+      // Try to find a text representation
+      let txt = e.title || e.text || e.name || e.source || e.fuente || url || "";
+
+      // If text is still empty, try to use the domain from the URL
+      if (!txt && url) {
+        try {
+          txt = new URL(url).hostname;
+        } catch {
+          txt = url;
+        }
+      }
+
       return { text: txt, url };
     }
     // string
@@ -217,13 +228,12 @@ export default function ChatbotCard() {
             <div>
               <div className="text-sm text-gray-600">Veredicto</div>
               <div
-                className={`text-lg font-semibold ${
-                  (result.veredicto || "").toUpperCase() === "VERDADERO"
+                className={`text-lg font-semibold ${(result.veredicto || "").toUpperCase() === "VERDADERO"
                     ? "text-green-700"
                     : (result.veredicto || "").toUpperCase() === "FALSO"
-                    ? "text-red-700"
-                    : "text-gray-700"
-                }`}
+                      ? "text-red-700"
+                      : "text-gray-700"
+                  }`}
               >
                 {result.veredicto ?? "INCONCLUSO"}
               </div>
