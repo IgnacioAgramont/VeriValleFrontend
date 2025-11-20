@@ -1,7 +1,7 @@
 // src/components/ChatbotCard.jsx
 import React, { useState, useEffect } from "react";
 
-export default function ChatbotCard() {
+export default function ChatbotCard({ onVerificationComplete }) {
   const [input, setInput] = useState("");
   const [loadingStage, setLoadingStage] = useState(null);
   const [result, setResult] = useState(null);
@@ -103,6 +103,7 @@ export default function ChatbotCard() {
         setResult(data.result);
         setLoadingStage(null);
         setShowLoader(false);
+        if (onVerificationComplete) onVerificationComplete();
         return;
       }
 
@@ -229,10 +230,10 @@ export default function ChatbotCard() {
               <div className="text-sm text-gray-600">Veredicto</div>
               <div
                 className={`text-lg font-semibold ${(result.veredicto || "").toUpperCase() === "VERDADERO"
-                    ? "text-green-700"
-                    : (result.veredicto || "").toUpperCase() === "FALSO"
-                      ? "text-red-700"
-                      : "text-gray-700"
+                  ? "text-green-700"
+                  : (result.veredicto || "").toUpperCase() === "FALSO"
+                    ? "text-red-700"
+                    : "text-gray-700"
                   }`}
               >
                 {result.veredicto ?? "INCONCLUSO"}

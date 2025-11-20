@@ -84,16 +84,7 @@ export default function App() {
           {/* Página principal */}
           <Route
             path="/"
-            element={
-              <>
-                <Hero />
-                <main className="relative z-10 w-full max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 pt-24 sm:pt-28 lg:pt-32">
-                  <ChatbotCard />
-                  <RecentCases />
-                </main>
-                <Footer />
-              </>
-            }
+            element={<Home />}
           />
 
           {/* Página de recursos */}
@@ -101,5 +92,25 @@ export default function App() {
         </Routes>
       </div>
     </Router>
+  );
+}
+
+function Home() {
+  const [refreshKey, setRefreshKey] = React.useState(0);
+
+  const handleVerificationComplete = () => {
+    // Increment key to force re-fetch in RecentCases
+    setRefreshKey(prev => prev + 1);
+  };
+
+  return (
+    <>
+      <Hero />
+      <main className="relative z-10 w-full max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 pt-24 sm:pt-28 lg:pt-32">
+        <ChatbotCard onVerificationComplete={handleVerificationComplete} />
+        <RecentCases key={refreshKey} />
+      </main>
+      <Footer />
+    </>
   );
 }
