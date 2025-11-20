@@ -10,7 +10,7 @@ import Recursos from "./pages/recursos";
 // 🧭 Navbar actualizado con navegación entre páginas
 function Navbar() {
   return (
-    <header className="header-top bg-blue-700 text-white py-4" role="banner">
+    <header className="header-top bg-[#7b1717] text-white py-4" role="banner">
       <div
         className="container"
         style={{
