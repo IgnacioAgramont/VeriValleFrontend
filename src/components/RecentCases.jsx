@@ -22,7 +22,7 @@ export default function RecentCases({ limit = 6 }) {
       setLoading(true);
       setErr(null);
       try {
-        const res = await axios.get(`${BASE_URL}/api/recent`, {
+        const res = await axios.get(`${BASE_URL}/api/recent?t=${Date.now()}`, {
           // no withCredentials by default; si usas cookies set withCredentials:true y config en backend
           headers: { Accept: "application/json" },
           timeout: 10000
@@ -58,7 +58,7 @@ export default function RecentCases({ limit = 6 }) {
           <div className="flex justify-between items-start">
             <div>
               <h3 className="text-lg font-semibold">{it.title || it.input_text || "Verificación"}</h3>
-              <p className="text-sm text-gray-600 mt-1">{it.excerpt || (it.summary ? it.summary.slice(0,200) + "…" : "")}</p>
+              <p className="text-sm text-gray-600 mt-1">{it.excerpt || (it.summary ? it.summary.slice(0, 200) + "…" : "")}</p>
             </div>
             <div className="text-right">
               <div className="text-sm text-gray-500">Veredicto</div>
