@@ -13,7 +13,7 @@ export default function Recursos() {
   return (
     <div className="min-h-screen bg-gray-50 flex flex-col">
       {/* Simple Header for this page */}
-      <header className="bg-blue-700 text-white py-4 shadow-md">
+      <header className="bg-[#7b1717] text-white py-4 shadow-md">
         <div className="container mx-auto px-4 flex items-center justify-between max-w-5xl">
           <h1 className="text-xl font-bold">Recursos Educativos</h1>
           <Link
@@ -56,7 +56,7 @@ export default function Recursos() {
         <div className="mt-16 text-center">
           <Link
             to="/"
-            className="inline-flex items-center justify-center px-6 py-3 border border-transparent text-base font-medium rounded-md text-white bg-blue-700 hover:bg-blue-800 transition-colors"
+            className="inline-flex items-center justify-center px-6 py-3 border border-transparent text-base font-medium rounded-md text-white bg-[#7b1717] hover:bg-[#5e1111] transition-colors"
           >
             Volver al Verificador
           </Link>
