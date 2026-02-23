@@ -52,7 +52,10 @@ export default function RecentCases({ limit = 6 }) {
   if (!items || items.length === 0) return <div className="mt-6 p-6 bg-white rounded shadow">No hay verificaciones publicadas aún.</div>;
 
   return (
-    <section className="mt-8 grid gap-6">
+    <section id="verificaciones" className="mt-8 grid gap-6">
+      <h2 className="text-2xl font-semibold mb-4 text-red-800">
+        Noticias verificadas
+      </h2>
       {items.map(it => (
         <article key={it.id} className="bg-white rounded-lg shadow p-6">
           <div className="flex justify-between items-start">

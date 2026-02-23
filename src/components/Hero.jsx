@@ -1,5 +1,6 @@
 // src/components/Hero.jsx
 import React from "react";
+import { Link } from "react-router-dom";
 
 export default function Hero() {
   return (
@@ -13,7 +14,7 @@ export default function Hero() {
         {/* CTA */}
         <div className="flex justify-center mt-6">
           <a
-            href="#chatbot"
+            href="/#chatbot"
             className="inline-block bg-white text-gray-900 font-semibold px-6 py-3 rounded-full shadow-md hover:shadow-lg transition"
             aria-label="Ir al chatbot de verificación"
           >
@@ -25,7 +26,7 @@ export default function Hero() {
         <div className="mt-10">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-4xl mx-auto">
             <a
-              href="#chatbot"
+              href="/#chatbot"
               className="flex flex-col items-center gap-3 bg-white/90 backdrop-blur rounded-2xl py-8 px-6 text-center hover:scale-[1.02] transform transition"
             >
               <div className="text-5xl">🤖</div>
@@ -36,7 +37,7 @@ export default function Hero() {
             </a>
 
             <a
-              href="/verificaciones"
+              href="/#verificaciones"
               className="flex flex-col items-center gap-3 bg-white/90 backdrop-blur rounded-2xl py-8 px-6 text-center hover:scale-[1.02] transform transition"
             >
               <div className="text-5xl">📰</div>
@@ -46,8 +47,8 @@ export default function Hero() {
               </p>
             </a>
 
-            <a
-              href="/recursos"
+            <Link
+              to="/recursos"
               className="flex flex-col items-center gap-3 bg-white/90 backdrop-blur rounded-2xl py-8 px-6 text-center hover:scale-[1.02] transform transition"
             >
               <div className="text-5xl">📚</div>
@@ -55,7 +56,7 @@ export default function Hero() {
               <p className="text-sm md:text-sm text-gray-600 max-w-xs">
                 Guías rápidas para aprender a detectar desinformación y evaluar fuentes.
               </p>
-            </a>
+            </Link>
           </div>
         </div>
       </div>
