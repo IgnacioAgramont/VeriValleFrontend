@@ -8,7 +8,7 @@ export default function Hero() {
       <div className="max-w-6xl mx-auto px-6 pt-12">
         {/* TITULO */}
         <h1 className="text-3xl md:text-5xl lg:text-6xl font-extrabold text-white text-center leading-tight">
-          Verifica, Confía, Comparte la Verdad.
+          Verifica, confía y comparte la verdad.
         </h1>
 
         {/* CTA */}

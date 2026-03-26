@@ -18,9 +18,6 @@ function Navbar() {
                         alt="VeriValle"
                         className="h-10 md:h-[46px] block"
                     />
-                    <span className="text-white font-[800] text-xl md:text-[22px] tracking-wide">
-                        VeriValle
-                    </span>
                 </div>
 
                 <nav
