@@ -10,7 +10,8 @@ export default function ChatbotCard({ onVerificationComplete }) {
     const [showLoader, setShowLoader] = useState(false);
 
     // FRONT: URL del backend (preferible: definir VITE_API_BASE en Netlify)
-    const baseUrl = import.meta.env.VITE_API_BASE || "https://veri-valle-backend.vercel.app";
+    const isLocal = typeof window !== 'undefined' && (window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1");
+    const baseUrl = import.meta.env.VITE_API_BASE || (isLocal ? "http://localhost:3001" : "https://veri-valle-backend.vercel.app");
 
     useEffect(() => {
         if (result) {

@@ -2,7 +2,8 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 
-const BASE_URL = import.meta.env.VITE_API_BASE || "https://veri-valle-backend.vercel.app";
+const isLocal = typeof window !== 'undefined' && (window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1");
+const BASE_URL = import.meta.env.VITE_API_BASE || (isLocal ? "http://localhost:3001" : "https://veri-valle-backend.vercel.app");
 
 function formatDate(iso) {
   try {

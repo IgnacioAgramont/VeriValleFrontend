@@ -16,7 +16,7 @@ function Navbar() {
                     <img
                         src="/logo.png"
                         alt="VeriValle"
-                        className="h-10 md:h-[46px] block"
+                        className="h-10 md:h-[46px] block bg-white p-1 rounded-md"
                     />
                 </div>
 

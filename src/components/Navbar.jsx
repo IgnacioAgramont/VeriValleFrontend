@@ -10,7 +10,7 @@ export default function Navbar() {
           <img
             src="/logo.png"
             alt="VeriValle"
-            className="h-11 sm:h-12 w-auto object-contain"
+            className="h-11 sm:h-12 w-auto object-contain bg-white p-1 rounded-md"
           />
         </a>
 
