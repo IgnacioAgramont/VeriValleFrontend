@@ -7,47 +7,61 @@ import RecentCases from "./components/RecentCases";
 import Footer from "./components/Footer";
 import Recursos from "./pages/recursos";
 
-// 🧭 Navbar actualizado con navegación entre páginas
+// 🧭 Navbar rediseñado para hacer el logo más grande y con detalles diagonales en color carmesí
 function Navbar() {
     return (
-        <header className="header-top bg-[#7b1717] text-white py-4" role="banner">
-            <div className="max-w-[1200px] mx-auto px-4 md:px-5 flex flex-wrap items-center justify-center md:justify-between gap-y-4 gap-x-8">
-                <div className="flex items-center gap-3">
-                    <img
-                        src="/logo.png"
-                        alt="VeriValle"
-                        className="h-10 md:h-[46px] block bg-white p-1 rounded-md"
-                    />
-                </div>
+        <header className="w-full flex flex-col" role="banner">
+            {/* Sección superior blanca con logo grande y cortes diagonales */}
+            <div className="relative bg-white py-6 md:py-8 overflow-hidden border-b border-gray-100 flex items-center justify-center min-h-[140px] md:min-h-[180px]">
+                {/* Detalle diagonal carmesí izquierdo */}
+                <div 
+                    className="absolute top-0 left-0 w-[45%] sm:w-[35%] md:w-[25%] h-full bg-[#7b1717]" 
+                    style={{ clipPath: 'polygon(0 0, 100% 0, 0 85%)' }}
+                />
+                
+                {/* Detalle diagonal carmesí derecho */}
+                <div 
+                    className="absolute top-0 right-0 w-[15%] sm:w-[10%] h-[30%] bg-[#7b1717]" 
+                    style={{ clipPath: 'polygon(100% 0, 100% 100%, 0 0)' }}
+                />
 
-                <nav
-                    aria-label="Main navigation"
-                    className="flex flex-wrap items-center justify-center gap-4 md:gap-5 text-sm md:text-base"
-                >
-                    <Link to="/" style={linkStyle}>
-                        Inicio
+                {/* Contenedor del logo centrado */}
+                <div className="relative z-10 flex flex-col items-center">
+                    <Link to="/">
+                        <img
+                            src="/logo.png"
+                            alt="VeriValle Logo"
+                            className="h-20 sm:h-28 md:h-36 w-auto object-contain transition-transform duration-300 hover:scale-105"
+                        />
                     </Link>
-                    <a href="/#chatbot" style={linkStyle}>
-                        Chatbot
-                    </a>
-                    <a href="/#verificaciones" style={linkStyle}>
-                        Verificaciones
-                    </a>
-                    <Link to="/recursos" style={linkStyle}>
-                        Recursos
-                    </Link>
-                </nav>
+                </div>
+            </div>
+
+            {/* Barra de navegación inferior oscura con enlaces */}
+            <div className="bg-[#222] text-white py-3 shadow-md">
+                <div className="max-w-[1200px] mx-auto px-4 flex items-center justify-center">
+                    <nav
+                        aria-label="Main navigation"
+                        className="flex flex-wrap items-center justify-center gap-6 md:gap-10 text-xs sm:text-sm md:text-base font-bold uppercase tracking-wider"
+                    >
+                        <Link to="/" className="hover:text-red-400 transition-colors py-1 px-2">
+                            Inicio
+                        </Link>
+                        <a href="/#chatbot" className="hover:text-red-400 transition-colors py-1 px-2">
+                            Chatbot
+                        </a>
+                        <a href="/#verificaciones" className="hover:text-red-400 transition-colors py-1 px-2">
+                            Verificaciones
+                        </a>
+                        <Link to="/recursos" className="hover:text-red-400 transition-colors py-1 px-2">
+                            Recursos
+                        </Link>
+                    </nav>
+                </div>
             </div>
         </header>
     );
 }
-
-// 🎨 estilos reutilizables
-const linkStyle = {
-    color: "rgba(255,255,255,0.95)",
-    textDecoration: "none",
-    fontWeight: 600,
-};
 
 // 🧩 Componente principal con rutas
 export default function App() {
