@@ -11,27 +11,27 @@ import Recursos from "./pages/recursos";
 function Navbar() {
     return (
         <header className="w-full flex flex-col" role="banner">
-            {/* Sección superior blanca con logo grande y cortes diagonales */}
-            <div className="relative bg-white py-6 md:py-8 overflow-hidden border-b border-gray-100 flex items-center justify-center min-h-[140px] md:min-h-[180px]">
-                {/* Detalle diagonal carmesí izquierdo */}
+            {/* Sección superior blanca con logo grande y cortes diagonales simétricos */}
+            <div className="relative bg-white pt-6 sm:pt-8 pb-0 overflow-hidden border-b border-gray-100 flex items-end justify-center">
+                {/* Detalle diagonal carmesí izquierdo (simétrico) */}
                 <div 
-                    className="absolute top-0 left-0 w-[45%] sm:w-[35%] md:w-[25%] h-full bg-[#7b1717]" 
-                    style={{ clipPath: 'polygon(0 0, 100% 0, 0 85%)' }}
+                    className="absolute top-0 left-0 w-[30%] sm:w-[25%] md:w-[20%] h-full bg-[#7b1717]" 
+                    style={{ clipPath: 'polygon(0 0, 100% 0, 0 100%)' }}
                 />
                 
-                {/* Detalle diagonal carmesí derecho */}
+                {/* Detalle diagonal carmesí derecho (simétrico) */}
                 <div 
-                    className="absolute top-0 right-0 w-[15%] sm:w-[10%] h-[30%] bg-[#7b1717]" 
-                    style={{ clipPath: 'polygon(100% 0, 100% 100%, 0 0)' }}
+                    className="absolute top-0 right-0 w-[30%] sm:w-[25%] md:w-[20%] h-full bg-[#7b1717]" 
+                    style={{ clipPath: 'polygon(0 0, 100% 0, 100% 100%)' }}
                 />
 
-                {/* Contenedor del logo centrado */}
+                {/* Contenedor del logo centrado apoyado en el borde inferior */}
                 <div className="relative z-10 flex flex-col items-center">
-                    <Link to="/">
+                    <Link to="/" className="block">
                         <img
                             src="/logo.png"
                             alt="VeriValle Logo"
-                            className="h-20 sm:h-28 md:h-36 w-auto object-contain transition-transform duration-300 hover:scale-105"
+                            className="h-20 sm:h-28 md:h-36 w-auto object-contain transition-transform duration-300 hover:scale-105 -mb-3 sm:-mb-4 md:-mb-5"
                         />
                     </Link>
                 </div>
