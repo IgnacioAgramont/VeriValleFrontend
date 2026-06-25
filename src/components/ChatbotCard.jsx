@@ -1,6 +1,47 @@
 // src/components/ChatbotCard.jsx
 import React, { useState, useEffect } from "react";
 
+// Función helper para parsear enlaces en formato markdown [Texto](url) y evitar desbordamientos
+function renderTextWithLinks(text) {
+    if (!text) return "";
+    const regex = /\[([^\]]+)\]\((https?:\/\/[^\s)]+)\)/g;
+    const parts = [];
+    let lastIndex = 0;
+    let match;
+
+    while ((match = regex.exec(text)) !== null) {
+        const [fullMatch, linkText, linkUrl] = match;
+        const startIndex = match.index;
+
+        // Agregar texto previo
+        if (startIndex > lastIndex) {
+            parts.push(text.substring(lastIndex, startIndex));
+        }
+
+        // Agregar enlace como componente React
+        parts.push(
+            <a 
+                key={startIndex} 
+                href={linkUrl} 
+                target="_blank" 
+                rel="noopener noreferrer" 
+                className="text-red-800 hover:text-red-600 hover:underline font-semibold break-all"
+            >
+                {linkText}
+            </a>
+        );
+
+        lastIndex = regex.lastIndex;
+    }
+
+    // Agregar el resto del texto
+    if (lastIndex < text.length) {
+        parts.push(text.substring(lastIndex));
+    }
+
+    return parts.length > 0 ? parts : text;
+}
+
 export default function ChatbotCard({ onVerificationComplete }) {
     const [input, setInput] = useState("");
     const [loadingStage, setLoadingStage] = useState(null);
@@ -248,8 +289,8 @@ export default function ChatbotCard({ onVerificationComplete }) {
                         </div>
                     </div>
 
-                    <div className="mt-4 text-gray-700 leading-relaxed">
-                        {result.resumen ?? "No hay resumen disponible."}
+                    <div className="mt-4 text-gray-700 leading-relaxed break-words whitespace-pre-line">
+                        {result.resumen ? renderTextWithLinks(result.resumen) : "No hay resumen disponible."}
                     </div>
 
                     {result.sources_used && (

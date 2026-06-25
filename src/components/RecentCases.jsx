@@ -2,6 +2,47 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 
+// Función helper para parsear enlaces en formato markdown [Texto](url) y evitar desbordamientos
+function renderTextWithLinks(text) {
+    if (!text) return "";
+    const regex = /\[([^\]]+)\]\((https?:\/\/[^\s)]+)\)/g;
+    const parts = [];
+    let lastIndex = 0;
+    let match;
+
+    while ((match = regex.exec(text)) !== null) {
+        const [fullMatch, linkText, linkUrl] = match;
+        const startIndex = match.index;
+
+        // Agregar texto previo
+        if (startIndex > lastIndex) {
+            parts.push(text.substring(lastIndex, startIndex));
+        }
+
+        // Agregar enlace como componente React
+        parts.push(
+            <a 
+                key={startIndex} 
+                href={linkUrl} 
+                target="_blank" 
+                rel="noopener noreferrer" 
+                className="text-red-800 hover:text-red-600 hover:underline font-semibold break-all"
+            >
+                {linkText}
+            </a>
+        );
+
+        lastIndex = regex.lastIndex;
+    }
+
+    // Agregar el resto del texto
+    if (lastIndex < text.length) {
+        parts.push(text.substring(lastIndex));
+    }
+
+    return parts.length > 0 ? parts : text;
+}
+
 const isLocal = typeof window !== 'undefined' && (window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1");
 const BASE_URL = import.meta.env.VITE_API_BASE || (isLocal ? "http://localhost:3001" : "https://veri-valle-backend.vercel.app");
 
@@ -62,7 +103,9 @@ export default function RecentCases({ limit = 6 }) {
           <div className="flex justify-between items-start">
             <div>
               <h3 className="text-lg font-semibold">{it.title || it.input_text || "Verificación"}</h3>
-              <p className="text-sm text-gray-600 mt-1">{it.excerpt || (it.summary ? it.summary.slice(0, 200) + "…" : "")}</p>
+              <p className="text-sm text-gray-600 mt-1 break-words whitespace-pre-line">
+                {renderTextWithLinks(it.excerpt || (it.summary ? it.summary.slice(0, 200) + "…" : ""))}
+              </p>
             </div>
             <div className="text-right">
               <div className="text-sm text-gray-500">Veredicto</div>
